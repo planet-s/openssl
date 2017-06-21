@@ -50,7 +50,7 @@ extern "C" {
  * set this to a comma-separated list of 'random' device files to try out. My
  * default, we will try to read at least one of these files
  */
-#  define DEVRANDOM "/dev/urandom","/dev/random","/dev/srandom"
+#  define DEVRANDOM "rand:"
 # endif
 # if !defined(OPENSSL_NO_EGD) && !defined(DEVRANDOM_EGD)
 /*
@@ -398,7 +398,7 @@ struct servent *PASCAL getservbyname(const char *, const char *);
 #    include <inet.h>
 #   else
 #    include <sys/socket.h>
-#    ifndef NO_SYS_UN_H
+#    if 0
 #     ifdef OPENSSL_SYS_VXWORKS
 #      include <streams/un.h>
 #     else
@@ -413,7 +413,7 @@ struct servent *PASCAL getservbyname(const char *, const char *);
 #    endif
 #    include <netinet/in.h>
 #    include <arpa/inet.h>
-#    include <netinet/tcp.h>
+//#    include <netinet/tcp.h>
 #   endif
 
 #   ifdef OPENSSL_SYS_AIX
@@ -425,7 +425,7 @@ struct servent *PASCAL getservbyname(const char *, const char *);
 #   endif
 
 #   ifndef VMS
-#    include <sys/ioctl.h>
+//#    include <sys/ioctl.h>
 #   else
         /* ioctl is only in VMS > 7.0 and when socketshr is not used */
 #    if !defined(TCPIP_TYPE_SOCKETSHR) && defined(__VMS_VER) && (__VMS_VER > 70000000)

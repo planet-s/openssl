@@ -15,8 +15,7 @@
 
 #include "apps.h"
 
-#if defined(OPENSSL_SYS_UNIX) || defined(__APPLE__) || \
-    (defined(__VMS) && defined(__DECC) && __CTRL_VER >= 80300000)
+#if 0
 # include <unistd.h>
 # include <stdio.h>
 # include <limits.h>

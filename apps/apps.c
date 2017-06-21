@@ -2223,13 +2223,13 @@ double app_tminterval(int stop, int usertime)
 double app_tminterval(int stop, int usertime)
 {
     double ret = 0;
-    struct rusage rus;
+    //struct rusage rus;
     struct timeval now;
     static struct timeval tmstart;
 
-    if (usertime)
-        getrusage(RUSAGE_SELF, &rus), now = rus.ru_utime;
-    else
+    //if (usertime)
+    //    getrusage(RUSAGE_SELF, &rus), now = rus.ru_utime;
+    //else
         gettimeofday(&now, NULL);
 
     if (stop == TM_START)

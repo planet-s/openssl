@@ -92,6 +92,8 @@ int BIO_get_port(const char *str, unsigned short *port_ptr)
 
 int BIO_sock_error(int sock)
 {
+    return 0; // XXX
+#if 0
     int j = 0, i;
     socklen_t size = sizeof(j);
 
@@ -106,6 +108,7 @@ int BIO_sock_error(int sock)
         return (get_last_socket_error());
     else
         return (j);
+#endif
 }
 
 # if OPENSSL_API_COMPAT < 0x10100000L
@@ -167,7 +170,7 @@ void bio_sock_cleanup_int(void)
 # endif
 }
 
-# if !defined(OPENSSL_SYS_VMS) || __VMS_VER >= 70000000
+# if 0
 
 int BIO_socket_ioctl(int fd, long type, void *arg)
 {

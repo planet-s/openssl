@@ -260,8 +260,8 @@ static void conn_close_socket(BIO *bio)
     c = (BIO_CONNECT *)bio->ptr;
     if (bio->num != (int)INVALID_SOCKET) {
         /* Only do a shutdown if things were established */
-        if (c->state == BIO_CONN_S_OK)
-            shutdown(bio->num, 2);
+        //if (c->state == BIO_CONN_S_OK)
+            //shutdown(bio->num, 2);
         BIO_closesocket(bio->num);
         bio->num = (int)INVALID_SOCKET;
     }

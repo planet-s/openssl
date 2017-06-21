@@ -86,6 +86,7 @@ int BIO_connect(int sock, const BIO_ADDR *addr, int options)
     if (!BIO_socket_nbio(sock, (options & BIO_SOCK_NONBLOCK) != 0))
         return 0;
 
+    /*
     if (options & BIO_SOCK_KEEPALIVE) {
         if (setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(on)) != 0) {
             SYSerr(SYS_F_SETSOCKOPT, get_last_socket_error());
@@ -101,6 +102,7 @@ int BIO_connect(int sock, const BIO_ADDR *addr, int options)
             return 0;
         }
     }
+    */
 
     if (connect(sock, BIO_ADDR_sockaddr(addr),
                 BIO_ADDR_sockaddr_size(addr)) == -1) {
@@ -152,6 +154,10 @@ int BIO_connect(int sock, const BIO_ADDR *addr, int options)
  */
 int BIO_listen(int sock, const BIO_ADDR *addr, int options)
 {
+    char *msg = "listen() not implement on Redox yet\n";
+    write(2, msg, strlen(msg));
+    return 0;
+#if 0
     int on = 1;
     int socktype;
     socklen_t socktype_len = sizeof(socktype);
@@ -222,6 +228,7 @@ int BIO_listen(int sock, const BIO_ADDR *addr, int options)
     }
 
     return 1;
+# endif
 }
 
 /*-
@@ -233,6 +240,10 @@ int BIO_listen(int sock, const BIO_ADDR *addr, int options)
  */
 int BIO_accept_ex(int accept_sock, BIO_ADDR *addr_, int options)
 {
+    char *msg = "accept() not implement on Redox yet\n";
+    write(2, msg, strlen(msg));
+    return INVALID_SOCKET;
+    /*
     socklen_t len;
     int accepted_sock;
     BIO_ADDR locaddr;
@@ -255,6 +266,7 @@ int BIO_accept_ex(int accept_sock, BIO_ADDR *addr_, int options)
     }
 
     return accepted_sock;
+    */
 }
 
 /*-

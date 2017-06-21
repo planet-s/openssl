@@ -99,7 +99,7 @@
 
 #endif
 
-#ifdef TERMIOS
+#if 0
 # include <termios.h>
 # define TTY_STRUCT             struct termios
 # define TTY_FLAGS              c_lflag
@@ -123,7 +123,7 @@
 # define TTY_set(tty,data)      ioctl(tty,TIOCSETP,data)
 #endif
 
-#if !defined(_LIBC) && !defined(OPENSSL_SYS_MSDOS) && !defined(OPENSSL_SYS_VMS)
+#if 0
 # include <sys/ioctl.h>
 #endif
 
@@ -165,7 +165,7 @@ static unsigned short channel = 0;
 #elif defined(_WIN32) && !defined(_WIN32_WCE)
 static DWORD tty_orig, tty_new;
 #else
-# if !defined(OPENSSL_SYS_MSDOS) || defined(__DJGPP__)
+# if 0
 static TTY_STRUCT tty_orig, tty_new;
 # endif
 #endif

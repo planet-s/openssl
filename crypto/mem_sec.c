@@ -24,7 +24,7 @@
 
 #include <string.h>
 
-#if defined(OPENSSL_SYS_LINUX) || defined(OPENSSL_SYS_UNIX)
+#if 0
 # define IMPLEMENTED
 # include <stdlib.h>
 # include <assert.h>
