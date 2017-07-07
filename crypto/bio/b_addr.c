@@ -763,18 +763,15 @@ int BIO_lookup(const char *host, const char *service,
         }
 
         CRYPTO_THREAD_write_lock(bio_lookup_lock);
-        he_fallback_address = 0; // XXX
+        he_fallback_address = INADDR_ANY;
         if (host == NULL) {
             he = &he_fallback;
             switch(lookup_type) {
             case BIO_LOOKUP_CLIENT:
-                ((char*)&he_fallback_address)[0] = 217; // XXX
-                ((char*)&he_fallback_address)[1] = 0;
-                ((char*)&he_fallback_address)[2] = 0;
-                ((char*)&he_fallback_address)[3] = 1;
+                he_fallback_address = INADDR_LOOPBACK;
                 break;
             case BIO_LOOKUP_SERVER:
-                he_fallback_address = 0; // XXX
+                he_fallback_address = INADDR_ANY;
                 break;
             default:
                 OPENSSL_assert(("We forgot to handle a lookup type!" == 0));
