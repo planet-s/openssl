@@ -11,6 +11,8 @@
 # define HEADER_E_OS_H
 
 # include <openssl/opensslconf.h>
+# include <sys/un.h>
+# include <sys/select.h>
 
 # include <openssl/e_os2.h>
 /*
