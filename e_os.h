@@ -13,6 +13,7 @@
 # include <openssl/opensslconf.h>
 # include <sys/un.h>
 # include <sys/select.h>
+# include <fcntl.h>
 
 # include <openssl/e_os2.h>
 /*

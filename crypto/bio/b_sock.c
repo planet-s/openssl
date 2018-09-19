@@ -318,12 +318,12 @@ int BIO_socket_nbio(int s, int mode)
     l = mode;
 
     ret = BIO_socket_ioctl(s, FIONBIO, &l);
-# elif defined(F_GETFL) && defined(F_SETFL) && (defined(O_NONBLOCK) || defined(FNDELAY))
+# elif 1 // defined(F_GETFL) && defined(F_SETFL) && (defined(O_NONBLOCK) || defined(FNDELAY))
     /* make sure this call always pushes an error level; BIO_socket_ioctl() does so, so we do too. */
 
     l = fcntl(s, F_GETFL, 0);
     if (l == -1) {
-        SYSerr(SYS_F_FCNTL, get_last_rtl_error());
+        SYSerr(SYS_F_FCNTL, get_last_socket_error());
         ret = -1;
     } else {
 #  if defined(O_NONBLOCK)
@@ -341,7 +341,7 @@ int BIO_socket_nbio(int s, int mode)
         ret = fcntl(s, F_SETFL, l);
 
         if (ret < 0) {
-            SYSerr(SYS_F_FCNTL, get_last_rtl_error());
+            SYSerr(SYS_F_FCNTL, get_last_socket_error());
         }
     }
 # else
