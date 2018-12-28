@@ -40,7 +40,7 @@
  * If unistd.h defines _POSIX_VERSION, we conclude that we are on a POSIX
  * system and have sigaction and termios.
  */
-# if 0
+# if defined(_POSIX_VERSION)
 
 #  define SIGACTION
 #  if !defined(TERMIOS) && !defined(TERMIO) && !defined(SGTTY)
@@ -99,7 +99,7 @@
 
 #endif
 
-#if 0
+#ifdef TERMIOS
 # include <termios.h>
 # define TTY_STRUCT             struct termios
 # define TTY_FLAGS              c_lflag
@@ -123,7 +123,7 @@
 # define TTY_set(tty,data)      ioctl(tty,TIOCSETP,data)
 #endif
 
-#if 0
+#if !defined(_LIBC) && !defined(OPENSSL_SYS_MSDOS) && !defined(OPENSSL_SYS_VMS)
 # include <sys/ioctl.h>
 #endif
 
@@ -165,7 +165,7 @@ static unsigned short channel = 0;
 #elif defined(_WIN32) && !defined(_WIN32_WCE)
 static DWORD tty_orig, tty_new;
 #else
-# if 0
+# if !defined(OPENSSL_SYS_MSDOS) || defined(__DJGPP__)
 static TTY_STRUCT tty_orig, tty_new;
 # endif
 #endif

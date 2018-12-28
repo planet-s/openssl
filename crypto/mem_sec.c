@@ -24,7 +24,7 @@
 
 #include <string.h>
 
-#if 0
+#if !defined(__redox__) && (defined(OPENSSL_SYS_LINUX) || defined(OPENSSL_SYS_UNIX))
 # define IMPLEMENTED
 # include <stdlib.h>
 # include <assert.h>

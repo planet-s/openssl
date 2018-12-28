@@ -401,7 +401,7 @@ struct servent *PASCAL getservbyname(const char *, const char *);
 #    include <inet.h>
 #   else
 #    include <sys/socket.h>
-#    if 0
+#    ifndef NO_SYS_UN_H
 #     ifdef OPENSSL_SYS_VXWORKS
 #      include <streams/un.h>
 #     else
@@ -416,7 +416,9 @@ struct servent *PASCAL getservbyname(const char *, const char *);
 #    endif
 #    include <netinet/in.h>
 #    include <arpa/inet.h>
-//#    include <netinet/tcp.h>
+#if !defined(__redox__)
+#    include <netinet/tcp.h>
+#endif
 #   endif
 
 #   ifdef OPENSSL_SYS_AIX
@@ -428,7 +430,7 @@ struct servent *PASCAL getservbyname(const char *, const char *);
 #   endif
 
 #   ifndef VMS
-//#    include <sys/ioctl.h>
+#    include <sys/ioctl.h>
 #   else
         /* ioctl is only in VMS > 7.0 and when socketshr is not used */
 #    if !defined(TCPIP_TYPE_SOCKETSHR) && defined(__VMS_VER) && (__VMS_VER > 70000000)

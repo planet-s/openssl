@@ -92,8 +92,6 @@ int BIO_get_port(const char *str, unsigned short *port_ptr)
 
 int BIO_sock_error(int sock)
 {
-    return 0; // XXX
-#if 0
     int j = 0, i;
     socklen_t size = sizeof(j);
 
@@ -103,12 +101,15 @@ int BIO_sock_error(int sock)
      * choke the compiler: if you do have a cast then you can either go for
      * (char *) or (void *).
      */
+#if defined(__redox__)
+    i = 0;
+#else
     i = getsockopt(sock, SOL_SOCKET, SO_ERROR, (void *)&j, &size);
+#endif
     if (i < 0)
         return (get_last_socket_error());
     else
         return (j);
-#endif
 }
 
 # if OPENSSL_API_COMPAT < 0x10100000L
@@ -170,7 +171,7 @@ void bio_sock_cleanup_int(void)
 # endif
 }
 
-# if 0
+# if !defined(__redox__) && (!defined(OPENSSL_SYS_VMS) || __VMS_VER >= 70000000)
 
 int BIO_socket_ioctl(int fd, long type, void *arg)
 {
@@ -318,7 +319,7 @@ int BIO_socket_nbio(int s, int mode)
     l = mode;
 
     ret = BIO_socket_ioctl(s, FIONBIO, &l);
-# elif 1 // defined(F_GETFL) && defined(F_SETFL) && (defined(O_NONBLOCK) || defined(FNDELAY))
+# elif defined(F_GETFL) && defined(F_SETFL) && (defined(O_NONBLOCK) || defined(FNDELAY))
     /* make sure this call always pushes an error level; BIO_socket_ioctl() does so, so we do too. */
 
     l = fcntl(s, F_GETFL, 0);

@@ -746,14 +746,12 @@ int BIO_lookup(const char *host, const char *service,
 # pragma pointer_size restore
 #endif
 
-#if 0
         struct servent *se;
         /* Apparently, on WIN64, s_proto and s_port have traded places... */
 #ifdef _WIN64
         struct servent se_fallback = { NULL, NULL, NULL, 0 };
 #else
         struct servent se_fallback = { NULL, NULL, 0, NULL };
-#endif
 #endif
 
         if (!RUN_ONCE(&bio_lookup_init, do_bio_lookup_init)) {
@@ -781,9 +779,14 @@ int BIO_lookup(const char *host, const char *service,
             he = gethostbyname(host);
 
             if (he == NULL) {
-#if 0
+#ifndef OPENSSL_SYS_WINDOWS
                 BIOerr(BIO_F_BIO_LOOKUP, ERR_R_SYS_LIB);
+#if defined(__redox__)
+                ERR_add_error_data(1, strerror(h_errno));
+#else
                 ERR_add_error_data(1, hstrerror(h_errno));
+#endif
+#else
                 SYSerr(SYS_F_GETHOSTBYNAME, WSAGetLastError());
 #endif
                 ret = 0;
@@ -791,16 +794,13 @@ int BIO_lookup(const char *host, const char *service,
             }
         }
 
-	long portnum;
-
         if (service == NULL) {
-            //se_fallback.s_port = 0;
-            //se_fallback.s_proto = NULL;
-            //se = &se_fallback;
-	    portnum = 0;
+            se_fallback.s_port = 0;
+            se_fallback.s_proto = NULL;
+            se = &se_fallback;
         } else {
             char *endp = NULL;
-            portnum = strtol(service, &endp, 10);
+            long portnum = strtol(service, &endp, 10);
 
 /*
  * Because struct servent is defined for 32-bit pointers only with
@@ -824,19 +824,23 @@ int BIO_lookup(const char *host, const char *service,
                 break;
             }
 
-#if 0
             if (endp != service && *endp == '\0'
                     && portnum > 0 && portnum < 65536) {
-                //se_fallback.s_port = htons(portnum);
-                //se_fallback.s_proto = proto;
-                //se = &se_fallback;
+                se_fallback.s_port = htons(portnum);
+                se_fallback.s_proto = proto;
+                se = &se_fallback;
             } else if (endp == service) {
-                //se = getservbyname(service, proto);
+                se = getservbyname(service, proto);
 
-                if (1) {
-#if 0
+                if (se == NULL) {
+#ifndef OPENSSL_SYS_WINDOWS
                     BIOerr(BIO_F_BIO_LOOKUP, ERR_R_SYS_LIB);
+#if defined(__redox__)
+                    ERR_add_error_data(1, strerror(h_errno));
+#else
                     ERR_add_error_data(1, hstrerror(h_errno));
+#endif
+#else
                     SYSerr(SYS_F_GETSERVBYNAME, WSAGetLastError());
 #endif
                     goto err;
@@ -845,7 +849,6 @@ int BIO_lookup(const char *host, const char *service,
                 BIOerr(BIO_F_BIO_LOOKUP, BIO_R_MALFORMED_HOST_OR_SERVICE);
                 goto err;
             }
-#endif
         }
 
         *res = NULL;
@@ -877,7 +880,7 @@ int BIO_lookup(const char *host, const char *service,
                 addrlistp--, addresses-- > 0; ) {
                 if (!addrinfo_wrap(he->h_addrtype, socktype,
                                    *addrlistp, he->h_length,
-                                   htons(portnum), &tmp_bai))
+                                   se->s_port, &tmp_bai))
                     goto addrinfo_malloc_err;
                 tmp_bai->bai_next = *res;
                 *res = tmp_bai;

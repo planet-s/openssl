@@ -335,7 +335,8 @@ int opt_format(const char *s, unsigned long flags, int *result);
 int opt_int(const char *arg, int *result);
 int opt_ulong(const char *arg, unsigned long *result);
 int opt_long(const char *arg, long *result);
-#if 0
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L && \
+    defined(INTMAX_MAX) && defined(UINTMAX_MAX)
 int opt_imax(const char *arg, intmax_t *result);
 int opt_umax(const char *arg, uintmax_t *result);
 #else

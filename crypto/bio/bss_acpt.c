@@ -117,7 +117,7 @@ static void acpt_close_socket(BIO *bio)
 
     c = (BIO_ACCEPT *)bio->ptr;
     if (c->accept_sock != (int)INVALID_SOCKET) {
-        //shutdown(c->accept_sock, 2);
+        shutdown(c->accept_sock, 2);
         closesocket(c->accept_sock);
         c->accept_sock = (int)INVALID_SOCKET;
         bio->num = (int)INVALID_SOCKET;
