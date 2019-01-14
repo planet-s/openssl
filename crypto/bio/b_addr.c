@@ -217,7 +217,7 @@ static int addr_strings(const BIO_ADDR *ap, int numeric,
         return 0;
 
     if (1) {
-#ifdef AI_PASSIVE
+#if defined(AI_PASSIVE) && !defined(__redox__)
         int ret = 0;
         char host[NI_MAXHOST] = "", serv[NI_MAXSERV] = "";
         int flags = 0;
