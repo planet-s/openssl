@@ -2193,7 +2193,7 @@ double app_tminterval(int stop, int usertime)
     return (ret);
 }
 
-#elif defined(_SC_CLK_TCK)      /* by means of unistd.h */
+#elif defined(_SC_CLK_TCK) && !defined(__redox__)      /* by means of unistd.h */
 # include <sys/times.h>
 
 double app_tminterval(int stop, int usertime)
