@@ -16,8 +16,13 @@ BEGIN {
 
 use File::Spec::Functions qw/catdir catfile curdir abs2rel rel2abs/;
 use File::Basename;
-use if $^O ne "VMS", 'File::Glob' => qw/glob/;
-use Test::Harness qw/runtests $switches/;
+use FindBin;
+use lib "$FindBin::Bin/../util/perl";
+use OpenSSL::Glob;
+use Module::Load::Conditional qw(can_load);
+
+my $TAP_Harness = can_load(modules => { 'TAP::Harness' => undef }) 
+    ? 'TAP::Harness' : 'OpenSSL::TAP::Harness';
 
 my $srctop = $ENV{SRCTOP} || $ENV{TOP};
 my $bldtop = $ENV{BLDTOP} || $ENV{TOP};
