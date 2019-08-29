@@ -171,7 +171,7 @@ void bio_sock_cleanup_int(void)
 # endif
 }
 
-# if !defined(__redox__) && (!defined(OPENSSL_SYS_VMS) || __VMS_VER >= 70000000)
+# if !defined(OPENSSL_SYS_VMS) || __VMS_VER >= 70000000
 
 int BIO_socket_ioctl(int fd, long type, void *arg)
 {
